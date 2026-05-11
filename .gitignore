@@ -4,6 +4,13 @@
 # Build
 bin/
 obj/
+tmp/
+app
+__pycache__
+nonSmoothGraphics
+smoothGraphics
+nonSmoothFunction
+smoothFunction
 
 # User files
 *.user
