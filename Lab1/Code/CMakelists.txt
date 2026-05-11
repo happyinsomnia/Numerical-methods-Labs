@@ -1,0 +1,26 @@
+cmake_minimum_required(VERSION 3.5)
+
+project(Lab1)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+include_directories(include)
+
+add_executable(app
+    src/main.cpp
+    src/method.cpp
+    src/error.cpp
+    src/experiments.cpp
+    src/functions.cpp
+    src/grid.cpp
+    src/gridIO.cpp
+)
+
+target_compile_options(app PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+)
