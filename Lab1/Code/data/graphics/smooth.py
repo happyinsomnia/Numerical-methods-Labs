@@ -9,6 +9,10 @@ def show_smooth_graphs():
     os.makedirs(save_directory_smooth_name, exist_ok=True)
     # Figure 1
     plt.figure("Actual smooth function with NewtonFrontward interpolation")
+    plt.title("Интерполяция гладкой функции методом Ньютона вперед")
+    plt.xlabel('x')
+    plt.ylabel("y")
+    
     draw_graph(
         smooth["actual"].x,
         smooth["actual"].y,
@@ -39,6 +43,10 @@ def show_smooth_graphs():
 
     # Figure 2
     plt.figure("Actual smooth function with Newton Chebyshev Interpolation")
+    plt.title("Интерполяция гладкой функции на Чебышевской сетке")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    
     draw_graph(
         smooth["actual"].x,
         smooth["actual"].y,
@@ -70,6 +78,10 @@ def show_smooth_graphs():
     )
     # Figure 3
     plt.figure("Actual smooth function error")
+    plt.title("Ошибка интерполяции гладкой функции")
+    plt.xlabel("x")
+    plt.ylabel("error")
+    
     draw_graph(
         smooth["uniform"]["error"].x,
         smooth["uniform"]["error"].y,

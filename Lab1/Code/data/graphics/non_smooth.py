@@ -8,6 +8,10 @@ def show_non_smooth_graphs():
     os.makedirs(save_directory_non_smooth_name, exist_ok=True)
     # Figure 1
     plt.figure("Actual non-smooth function with NewtonFrontward interpolation")
+    plt.title("Интерполяция негладкой функции методом Ньютона вперед")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    
     draw_graph(
         non_smooth["actual"].x,
         non_smooth["actual"].y,
@@ -39,6 +43,10 @@ def show_non_smooth_graphs():
 
     # Figure 2
     plt.figure("Actual non-smooth function with Newton Chebyshev interpolation")
+    plt.title("Интерполяция негладкой функции на Чебышевской сетке")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    
     draw_graph(
         non_smooth["actual"].x,
         non_smooth["actual"].y,
@@ -69,6 +77,10 @@ def show_non_smooth_graphs():
     )
     # Figure 3
     plt.figure("Actual non-smooth function error")
+    plt.title("Ошибка интерполяции негладкой функции")
+    plt.xlabel("x")
+    plt.ylabel("error")
+    
     draw_graph(
         non_smooth["uniform"]["error"].x,
         non_smooth["uniform"]["error"].y,
