@@ -6,12 +6,17 @@ bin/
 obj/
 tmp/
 app
+# Lab 1
 __pycache__
-nonSmoothGraphics
-smoothGraphics
-nonSmoothFunction
-smoothFunction
-
+nonSmoothGraphics/
+smoothGraphics/
+nonSmoothFunction/
+smoothFunction/
+# Lab 2
+function1 data/
+function2 data/
+function1 graphics/
+function2 graphics/
 # User files
 *.user
 *.suo
