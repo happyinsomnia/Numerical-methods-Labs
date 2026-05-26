@@ -1,0 +1,5 @@
+from function1_graphics import show_function1_graphics
+from function2_graphics import show_function2_graphics
+
+show_function1_graphics()
+show_function2_graphics()
