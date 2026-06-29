@@ -6,20 +6,27 @@ bin/
 obj/
 tmp/
 app
+
 # Lab 1
 __pycache__
 nonSmoothGraphics/
 smoothGraphics/
 nonSmoothFunction/
 smoothFunction/
+
 # Lab 2
 function1 data/
 function2 data/
 function1 graphics/
 function2 graphics/
 # User files
+
+# Lab 3
+plot_data/
+
 *.user
 *.suo
+
 
 # VS Code
 .vscode/
