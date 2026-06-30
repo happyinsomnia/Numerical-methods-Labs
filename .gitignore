@@ -23,6 +23,7 @@ function2 graphics/
 
 # Lab 3
 plot_data/
+png/
 
 *.user
 *.suo
