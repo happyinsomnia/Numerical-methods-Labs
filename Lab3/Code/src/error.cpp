@@ -18,11 +18,6 @@ double rungeRule(
     return std::abs(y_big - y_small) / (std::pow(2.0, s) - 1);
 }
 
-double absoluteError(double exactValue, double methodValue)
-{
-    return std::abs(exactValue - methodValue);
-}
-
 double localError(double yActual, double yMethod)
 {
     return std::abs(yActual - yMethod);

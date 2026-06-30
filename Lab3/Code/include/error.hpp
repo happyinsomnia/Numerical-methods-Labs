@@ -9,8 +9,6 @@ double rungeRule(
     std::function<double(double, double)> func,
     std::function<double(double, double, double, std::function<double(double, double)>)> method);
 
-double absoluteError(double exactValue, double methodValue);
-
 double localError(double yActual, double yMethod);
 
 double globalError(double yActual, double yMethod);
