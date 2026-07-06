@@ -34,9 +34,9 @@
   #set text(size: 18pt, weight: "bold")
   #block(smallcaps(it.body))
 ]
-
+\
 #align(center)[Отчет по лабораторной работе №1 \ #strong("Приближение табличных функций")]
-
+\ \
 #grid(
   columns: (1fr, 1fr),
   align(center)[Выполнил студент гр. 5030102/30004\ Преподаватель:], align(center)[Зернов.К.В\ Курц. В.В],
@@ -385,19 +385,31 @@ $P_3(x) = #y_cheb.at(0) + #coefficients.at(1) (0.6 - #x_cheb.at(0)) + #coefficie
     - numberKnots -- количество узлов, которые будут использоваться для построения полинома
     - numberPoints -- количество точек используемых для построения графика полинома
 
-= Численный анализ 
+= Численный анализ
 
 == Графики
 
-#image("../Code/data/graphics/smoothGraphics/Actual smooth function with NewtonFrontward interpolation.png", width: 100%)
+#image(
+  "../Code/data/graphics/smoothGraphics/Actual smooth function with NewtonFrontward interpolation.png",
+  width: 100%,
+)
 
-#image("../Code/data/graphics/nonSmoothGraphics/Actual non-smooth function with NewtonFrontward interpolation.png", width: 100%)
+#image(
+  "../Code/data/graphics/nonSmoothGraphics/Actual non-smooth function with NewtonFrontward interpolation.png",
+  width: 100%,
+)
 
 На графике видно что интерполяционный полином Ньютона для функции $|x^2 - 2 x - 3|$ дает значительные осцилляции на краях интервала $[2.0, 4.0].$
 
-#image("../Code/data/graphics/smoothGraphics/Actual smooth function with Newton Chebyshev Interpolation.png", width: 100%)
+#image(
+  "../Code/data/graphics/smoothGraphics/Actual smooth function with Newton Chebyshev Interpolation.png",
+  width: 100%,
+)
 
-#image("../Code/data/graphics/nonSmoothGraphics/Actual non-smooth function with Newton Chebyshev interpolation.png", width: 100%)
+#image(
+  "../Code/data/graphics/nonSmoothGraphics/Actual non-smooth function with Newton Chebyshev interpolation.png",
+  width: 100%,
+)
 
 На Чебышевской сетке, как видно, интерполяционный полином значительно точнее аппроксимирует негладкую функцию. Наибольшее отклонение наблюдается в точке $x = 3.0$.
 

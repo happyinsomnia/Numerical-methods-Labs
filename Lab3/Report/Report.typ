@@ -32,11 +32,11 @@
   #set text(size: 18pt, weight: "bold")
   #block(smallcaps(it.body))
 ]
-
+\
 #align(
   center,
 )[Отчет по лабораторной работе №5 \ #strong("Решение задачи Коши для обыкновенных дифференциальных уравнений. Одношаговые методы")]
-
+\ \
 #grid(
   columns: (1fr, 1fr),
   align(center)[Выполнил студент гр. 5030102/30004\ Преподаватель:], align(center)[Зернов.К.В\ Курц. В.В],
@@ -267,17 +267,17 @@ $y_1^h = y_0.5 + h f(x_0.5 + h/2, y_0.5 + h/2 f(x_0.5, y_0.5)) = 1.105 + 0.1 dot
 
 = Графики
 + Численное решение модифицированным методом Эйлера ($h = 0.01$)
-  #image("../Code/data/graphics/png/Actual function and approximate function.png", width: 100%) 
+  #image("../Code/data/graphics/png/Actual function and approximate function.png", width: 100%)
   Из графика видно, что численное решение хорошо аппроксимирует точное решение. \ \ \
 
 + Ошибка модифицированного метода Эйлера
 
   #image("../Code/data/graphics/png/Numerical solution error.png", width: 100%)
- С увлечением $x$ ошибка растет линейно \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \ \
+  С увлечением $x$ ошибка растет линейно \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \ \
 
 + Зависимость шага от локальной и глобальной погрешности
   #image("../Code/data/graphics/png/Local And Global Error vs h.png", width: 100%)
-  Из графика заметно, оценки что локальная и глобальная ошибки соответствует теории \ \ 
+  Из графика заметно, оценки что локальная и глобальная ошибки соответствует теории \ \
 
 + Зависимость погрешности в начальных на данных на глобальную ошибку
   #image("../Code/data/graphics/png/Delta vs global error.png", width: 100%)
