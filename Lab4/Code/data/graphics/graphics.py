@@ -53,7 +53,9 @@ def show_graphics():
     h = np.array([x for x, y in stepError])
     error = [y for x, y in stepError]
 
-    plt.loglog(h, error, label="Максимальная ошибка", color="red", linestyle="-")
+    plt.loglog(
+        h, error, marker="o", label="Максимальная ошибка", color="red", linestyle="-"
+    )
     plt.loglog(h, h**2, label=r"$\mathcal{O}(h^2)$", color="purple", linestyle="--")
     plt.grid()
     plt.legend()
@@ -74,6 +76,6 @@ def show_graphics():
     plt.grid()
     plt.legend()
 
-    plt.savefig(dirname + "Step dependence on error.png")
+    plt.savefig(dirname + "Delta dependence on error.png")
 
     plt.show()
