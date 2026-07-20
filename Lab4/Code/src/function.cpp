@@ -19,5 +19,4 @@ std::vector<double> buildExactSolution(double a, double b, double h, std::functi
     }
 
     return exact;
-    
 }

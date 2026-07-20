@@ -54,10 +54,10 @@ std::vector<double> factorizationMethod(double a,
     for (double x = a; x + h <= b; x += h)
     {
         double s_half = methodEuler(x, s_method.back().second, h, [&equations](double x_k, double s)
-                                    { return -pow(s,2.0) - equations.q(x_k) / equations.p(x_k) * s - equations.r(x_k) / equations.p(x_k); });
+                                    { return -pow(s, 2.0) - equations.q(x_k) / equations.p(x_k) * s - equations.r(x_k) / equations.p(x_k); });
 
         double s_k = modifiedEulerMethod(x, s_method.back().second, h, [&equations](double x_k, double s)
-                                         { return -pow(s,2.0) - equations.q(x_k) / equations.p(x_k) * s - equations.r(x_k) / equations.p(x_k); });
+                                         { return -pow(s, 2.0) - equations.q(x_k) / equations.p(x_k) * s - equations.r(x_k) / equations.p(x_k); });
 
         double t_half = methodEuler(x, t_method.back().second, s_method.back().second, h, [&equations](double x_k, double t, double s)
                                     { return equations.f(x_k) / equations.p(x_k) - s * t - (equations.q(x_k) * t) / equations.p(x_k); });

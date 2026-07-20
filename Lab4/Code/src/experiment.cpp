@@ -110,7 +110,7 @@ void RunExperiments(const std::string path,
     std::string actualFunctionPath = "actual_function.txt";
     std::ofstream fileActualFunction(path + actualFunctionPath);
 
-    if(!fileActualFunction.is_open())
+    if (!fileActualFunction.is_open())
     {
         std::cerr << "Can't open the file " + actualFunctionPath << std::endl;
         return;
@@ -121,7 +121,6 @@ void RunExperiments(const std::string path,
     {
         fileActualFunction << step << ' ' << exactSolution(step) << std::endl;
     }
-    
-    
+
     fileActualFunction.close();
 }

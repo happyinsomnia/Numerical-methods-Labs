@@ -75,5 +75,5 @@ def show_graphics():
     plt.legend()
 
     plt.savefig(dirname + "Step dependence on error.png")
-    
+
     plt.show()
