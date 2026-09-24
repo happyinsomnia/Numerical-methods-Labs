@@ -36,15 +36,15 @@ void WriteData(const std::string &filename,
 
         int N = 1;
 
-        auto error = RungeError(a,b,2,N, TrapezoidalRule, func);
-        while(error > eps)
+        auto error = RungeError(a, b, 2, N, TrapezoidalRule, func);
+        while (error > eps)
         {
             N *= 2;
 
-            error = RungeError(a,b,2,N, TrapezoidalRule, func);
+            error = RungeError(a, b, 2, N, TrapezoidalRule, func);
         }
 
-        double calculatedValue = TrapezoidalRule(a,b,2*N,func);
+        double calculatedValue = TrapezoidalRule(a, b, 2 * N, func);
 
         file << AbsoluteError(actualValue, calculatedValue) << ',' << eps << '\n';
     }
@@ -69,7 +69,7 @@ void WriteData(const std::string &filename,
             error = RungeError(a, b, 2, N, TrapezoidalRule, func);
         }
 
-        file << 2*N << ',' << eps << '\n';
+        file << 2 * N << ',' << eps << '\n';
     }
 
     // Graphic 3: error vs h

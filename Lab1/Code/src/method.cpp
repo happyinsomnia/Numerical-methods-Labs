@@ -50,17 +50,6 @@ std::vector<double> DividedDifference(const Grid &grid)
     return coefficients;
 }
 
-long long Factorial(int n)
-{
-    long long value = 1;
-    for (size_t i = 2; i <= n; i++)
-    {
-        value *= i;
-    }
-
-    return value;
-}
-
 std::vector<double> NewtonFrontwardInterpolation(const Grid &grid, const std::vector<double> &x)
 {
 
@@ -76,14 +65,13 @@ std::vector<double> NewtonFrontwardInterpolation(const Grid &grid, const std::ve
         double value = grid.y[0];
 
         double t = (x[i] - grid.x[0]) / *h;
-
         double product = 1.0;
 
         for (size_t j = 1; j < grid.x.size(); j++)
         {
-            product *= (t - (j - 1));
+            product *= (t - (j - 1)) / j;
 
-            value += diff[j] * product / Factorial(j);
+            value += diff[j] * product;
         }
 
         interpolationValue[i] = value;
@@ -106,7 +94,7 @@ std::vector<double> NewtonDividedInterpolation(const Grid &grid, const std::vect
 
         for (size_t j = 1; j < grid.x.size(); j++)
         {
-            product *= (x[i] - grid.x[j-1]);
+            product *= (x[i] - grid.x[j - 1]);
             value += diff[j] * product;
         }
         interpolationValue[i] = value;

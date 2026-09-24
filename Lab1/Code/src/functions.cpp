@@ -4,7 +4,7 @@
 
 double Function1(double x)
 {
-    if(x < - 1)
+    if (x <= -1)
         throw std::invalid_argument("function don't exist in this x");
 
     return x * log(x + 1);
