@@ -22,6 +22,8 @@ void RunSmoothFunctionExperiment(double left, double right, int numberKnots, int
     const std::string fileNewtonChebeshivsyValues = "data/smoothFunction/chebeshivsy/newton_chebeshivsy_values.txt";
     const std::string fileErrorUniform = "data/smoothFunction/uniform/newton_uniform_error.txt";
     const std::string fileErrorChebeshivsy = "data/smoothFunction/chebeshivsy/newton_chebeshivsy_error.txt";
+    const std::string fileMaxErrorUniform = "data/smoothFunction/uniform/max_newton_uniform_error.txt";
+    const std::string fileMaxErrorChebeshivsy = "data/smoothFunction/chebeshivsy/max_newton_chebeshivsy_error.txt";
 
     Grid newtonGrid;
     Grid newtonChebeshivsyGrid;
@@ -62,6 +64,9 @@ void RunSmoothFunctionExperiment(double left, double right, int numberKnots, int
 
     // Chebeshivsy error:
     ComputeErrorsForNodes(fileErrorChebeshivsy, plotGrid, newtonChebeshivsyGrid);
+
+    // knots vs maxError
+    MaxErrorVsKnots(fileMaxErrorUniform, fileMaxErrorChebeshivsy, left, right, numberKnots, plotX, Function1, plotGrid);
 }
 
 void RunNonSmoothFunctionExperiment(double left, double right, int numberKnots, int numberPoints)
@@ -77,6 +82,8 @@ void RunNonSmoothFunctionExperiment(double left, double right, int numberKnots, 
     const std::string fileNewtonChebeshivsyValues = "data/nonSmoothFunction/chebeshivsy/newton_chebeshivsy_values.txt";
     const std::string fileErrorUniform = "data/nonSmoothFunction/uniform/newton_uniform_error.txt";
     const std::string fileErrorChebeshivsy = "data/nonSmoothFunction/chebeshivsy/newton_chebeshivsy_error.txt";
+    const std::string fileMaxErrorUniform = "data/nonSmoothFunction/uniform/max_newton_uniform_error.txt";
+    const std::string fileMaxErrorChebeshivsy = "data/nonSmoothFunction/chebeshivsy/max_newton_chebeshivsy_error.txt";
 
     Grid newtonGrid;
     Grid newtonChebeshivsyGrid;
@@ -117,4 +124,7 @@ void RunNonSmoothFunctionExperiment(double left, double right, int numberKnots, 
 
     // Chebeshivsy error:
     ComputeErrorsForNodes(fileErrorChebeshivsy, plotGrid, newtonChebeshivsyGrid);
+
+    // maxError vs knotsValue
+    MaxErrorVsKnots(fileMaxErrorUniform, fileMaxErrorChebeshivsy, left, right, numberKnots, plotX, Function2, plotGrid);
 }

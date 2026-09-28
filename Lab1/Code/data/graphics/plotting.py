@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from dataclasses import dataclass
 
+
 @dataclass
 class GraphData:
     x: list
@@ -32,4 +33,3 @@ def draw_graph(x, y, color="blue", label="graph", linestyle="-", linewidth=2):
 
 def draw_knots(x, y, color="red", label="knots", size=40):
     plt.scatter(x, y, color=color, label=label, s=size)
-

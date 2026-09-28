@@ -4,6 +4,9 @@
 
 std::vector<double> CreateChebeshivsyKnots(double left, double right, int n)
 {
+    if (n == 0)
+        return std::vector<double>();
+
     std::vector<double> data;
 
     for (size_t i = 0; i < n; i++)
@@ -18,6 +21,9 @@ std::vector<double> CreateChebeshivsyKnots(double left, double right, int n)
 
 std::vector<double> CreateUniformKnots(double left, double right, int n)
 {
+    if (n == 0)
+        return std::vector<double>();
+
     std::vector<double> data(n);
 
     double h = (right - left) / (n - 1);
@@ -32,7 +38,7 @@ std::vector<double> CreateUniformKnots(double left, double right, int n)
 
 std::optional<double> CheckUniformGrid(const Grid &grid)
 {
-    
+
     if (grid.x.size() < 2)
         return std::nullopt;
 

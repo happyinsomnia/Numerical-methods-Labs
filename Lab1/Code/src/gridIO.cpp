@@ -4,7 +4,7 @@
 void SaveGrid(const std::string &path, const Grid &grid)
 {
     std::ofstream file(path);
-    
+
     if (!file.is_open())
     {
         std::cout << " Couldn't open file by path " + path << std::endl;

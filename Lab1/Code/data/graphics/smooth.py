@@ -10,9 +10,9 @@ def show_smooth_graphs():
     # Figure 1
     plt.figure("Actual smooth function with NewtonFrontward interpolation")
     plt.title("Интерполяция гладкой функции методом Ньютона вперед")
-    plt.xlabel('x')
+    plt.xlabel("x")
     plt.ylabel("y")
-    
+
     draw_graph(
         smooth["actual"].x,
         smooth["actual"].y,
@@ -46,7 +46,7 @@ def show_smooth_graphs():
     plt.title("Интерполяция гладкой функции на Чебышевской сетке")
     plt.xlabel("x")
     plt.ylabel("y")
-    
+
     draw_graph(
         smooth["actual"].x,
         smooth["actual"].y,
@@ -81,7 +81,7 @@ def show_smooth_graphs():
     plt.title("Ошибка интерполяции гладкой функции")
     plt.xlabel("x")
     plt.ylabel("error")
-    
+
     draw_graph(
         smooth["uniform"]["error"].x,
         smooth["uniform"]["error"].y,
@@ -99,5 +99,59 @@ def show_smooth_graphs():
     plt.legend()
 
     plt.savefig(save_directory_smooth_name / "Actual smooth function error.png")
+
+    # Figure 4 knots count vs max error (Uniform)
+
+    plt.figure("Actual smooth function max error(Uniform)")
+    plt.title("Максимальная ошибка интерполяции гладкой функции от шага сетки")
+    plt.xlabel("knots count")
+    plt.ylabel("max error")
+
+    draw_graph(
+        smooth["uniform"]["max_error"].x,
+        smooth["uniform"]["max_error"].y,
+        color="red",
+        label="NewtonFrontward Interpolation max error",
+    )
+
+    draw_knots(
+        smooth["uniform"]["max_error"].x,
+        smooth["uniform"]["max_error"].y,
+        color="orange",
+    )
+
+    plt.legend()
+    plt.grid()
+
+    plt.savefig(
+        save_directory_smooth_name / "Actual smooth function max error Uniform.png"
+    )
+
+    # Figure 5 knots count vs max error (Chebyshev)
+
+    plt.figure("Actual smooth function max error(Chebyshev)")
+    plt.title("Максимальная ошибка интерполяции гладкой функции от шага сетки")
+    plt.xlabel("knots count")
+    plt.ylabel("max error")
+
+    draw_graph(
+        smooth["cheb"]["max_error"].x,
+        smooth["cheb"]["max_error"].y,
+        color="blue",
+        label="Newton Chebyshev Interpolation max error",
+    )
+
+    draw_knots(
+        smooth["cheb"]["max_error"].x,
+        smooth["cheb"]["max_error"].y,
+        color="orange",
+    )
+
+    plt.legend()
+    plt.grid()
+
+    plt.savefig(
+        save_directory_smooth_name / "Actual smooth function max error Chebyshev.png"
+    )
 
     plt.show()

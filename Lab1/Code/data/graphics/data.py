@@ -11,11 +11,13 @@ file_smooth_path = {
         "knots": "../smoothFunction/uniform/knots_uniform.txt",
         "newton": "../smoothFunction/uniform/newton_frontward_values.txt",
         "error": "../smoothFunction/uniform/newton_uniform_error.txt",
+        "max_error": "../smoothFunction/uniform/max_newton_uniform_error.txt",
     },
     "cheb": {
         "knots": "../smoothFunction/chebeshivsy/knots_chebeshivsy.txt",
         "newton": "../smoothFunction/chebeshivsy/newton_chebeshivsy_values.txt",
         "error": "../smoothFunction/chebeshivsy/newton_chebeshivsy_error.txt",
+        "max_error": "../smoothFunction/chebeshivsy/max_newton_chebeshivsy_error.txt",
     },
 }
 
@@ -25,11 +27,13 @@ file_non_smooth_path = {
         "knots": "../nonSmoothFunction/uniform/knots_uniform.txt",
         "newton": "../nonSmoothFunction/uniform/newton_frontward_values.txt",
         "error": "../nonSmoothFunction/uniform/newton_uniform_error.txt",
+        "max_error": "../nonSmoothFunction/uniform/max_newton_uniform_error.txt",
     },
     "cheb": {
         "knots": "../nonSmoothFunction/chebeshivsy/knots_chebeshivsy.txt",
         "newton": "../nonSmoothFunction/chebeshivsy/newton_chebeshivsy_values.txt",
         "error": "../nonSmoothFunction/chebeshivsy/newton_chebeshivsy_error.txt",
+        "max_error": "../nonSmoothFunction/chebeshivsy/max_newton_chebeshivsy_error.txt",
     },
 }
 
@@ -42,11 +46,13 @@ smooth = {
         "knots": pars(file_smooth_path["uniform"]["knots"]),
         "newton": pars(file_smooth_path["uniform"]["newton"]),
         "error": pars(file_smooth_path["uniform"]["error"]),
+        "max_error": pars(file_smooth_path["uniform"]["max_error"]),
     },
     "cheb": {
         "knots": pars(file_smooth_path["cheb"]["knots"]),
         "newton": pars(file_smooth_path["cheb"]["newton"]),
         "error": pars(file_smooth_path["cheb"]["error"]),
+        "max_error": pars(file_smooth_path["cheb"]["max_error"]),
     },
 }
 non_smooth = {
@@ -55,10 +61,12 @@ non_smooth = {
         "knots": pars(file_non_smooth_path["uniform"]["knots"]),
         "newton": pars(file_non_smooth_path["uniform"]["newton"]),
         "error": pars(file_non_smooth_path["uniform"]["error"]),
+        "max_error": pars(file_non_smooth_path["uniform"]["max_error"]),
     },
     "cheb": {
         "knots": pars(file_non_smooth_path["cheb"]["knots"]),
         "newton": pars(file_non_smooth_path["cheb"]["newton"]),
         "error": pars(file_non_smooth_path["cheb"]["error"]),
+        "max_error": pars(file_non_smooth_path["cheb"]["max_error"]),
     },
 }
