@@ -101,9 +101,7 @@ def show_non_smooth_graphs():
 
     # Figure 4 knots count vs max error (Uniform)
     plt.figure("Knots count vs max error (Uniform)")
-    plt.title(
-        "Зависимость максимальной ошибки от количества узлов негладкая функция равномерная сетка"
-    )
+    plt.title("Зависимость ошибки от количества узлов негладкая функция")
     plt.xlabel("Knots count")
     plt.ylabel("Max error")
 
@@ -130,9 +128,7 @@ def show_non_smooth_graphs():
 
     # Figure 5 knots count vs max error (Chebyshev)
     plt.figure("Knots count vs max error (Chebyshev)")
-    plt.title(
-        "Зависимость максимальной ошибки от количества узлов негладкая функция Чебышевская сетка"
-    )
+    plt.title("Зависимость ошибки от количества узлов негладкая функция")
     plt.xlabel("Knots count")
     plt.ylabel("Max error")
 
