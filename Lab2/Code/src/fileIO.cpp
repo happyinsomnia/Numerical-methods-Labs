@@ -35,18 +35,15 @@ void WriteData(const std::string &filename,
         double eps = epsilon[k];
 
         int N = 1;
-
-        auto error = RungeError(a, b, 2, N, TrapezoidalRule, func);
+        double approximation = TrapezoidalRule(a, b, N, func);
+        auto error = RungeError(a, b, 2, N, TrapezoidalRule, func, approximation);
         while (error > eps)
         {
             N *= 2;
-
-            error = RungeError(a, b, 2, N, TrapezoidalRule, func);
+            error = RungeError(a, b, 2, N, TrapezoidalRule, func, approximation);
         }
 
-        double calculatedValue = TrapezoidalRule(a, b, 2 * N, func);
-
-        file << AbsoluteError(actualValue, calculatedValue) << ',' << eps << '\n';
+        file << AbsoluteError(actualValue, approximation) << ',' << eps << '\n';
     }
 
     // Graphic 2: N vs Number of approximation
@@ -59,14 +56,14 @@ void WriteData(const std::string &filename,
         double eps = epsilon[k];
 
         int N = 1;
+        double approximation = TrapezoidalRule(a, b, N, func);
 
-        auto error = RungeError(a, b, 2, N, TrapezoidalRule, func);
+        auto error = RungeError(a, b, 2, N, TrapezoidalRule, func, approximation);
 
         while (error > eps)
         {
             N *= 2;
-
-            error = RungeError(a, b, 2, N, TrapezoidalRule, func);
+            error = RungeError(a, b, 2, N, TrapezoidalRule, func, approximation);
         }
 
         file << 2 * N << ',' << eps << '\n';
