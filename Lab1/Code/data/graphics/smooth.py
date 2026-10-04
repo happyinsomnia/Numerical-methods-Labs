@@ -1,6 +1,4 @@
-# Figure 1
 import matplotlib.pyplot as plt
-from plotting import draw_graph, draw_knots
 from data import smooth, save_directory_smooth_name
 import os
 
@@ -13,26 +11,29 @@ def show_smooth_graphs():
     plt.xlabel("x")
     plt.ylabel("y")
 
-    draw_graph(
+    plt.plot(
         smooth["actual"].x,
         smooth["actual"].y,
         color="red",
         label="Actual Function",
         linestyle="-",
     )
-    draw_graph(
+
+    plt.plot(
         smooth["uniform"]["newton"].x,
         smooth["uniform"]["newton"].y,
         color="blue",
         label="NewtonFrontward Interpolation",
         linestyle="--",
     )
-    draw_knots(
+
+    plt.scatter(
         smooth["uniform"]["knots"].x,
         smooth["uniform"]["knots"].y,
         color="orange",
         label="NewtonFrontward knots",
     )
+
     plt.legend()
     plt.grid()
 
@@ -47,14 +48,14 @@ def show_smooth_graphs():
     plt.xlabel("x")
     plt.ylabel("y")
 
-    draw_graph(
+    plt.plot(
         smooth["actual"].x,
         smooth["actual"].y,
         color="red",
         label="Actual Function",
         linestyle="-",
     )
-    draw_graph(
+    plt.plot(
         smooth["cheb"]["newton"].x,
         smooth["cheb"]["newton"].y,
         color="green",
@@ -62,7 +63,7 @@ def show_smooth_graphs():
         linestyle="--",
     )
 
-    draw_knots(
+    plt.scatter(
         smooth["cheb"]["knots"].x,
         smooth["cheb"]["knots"].y,
         color="orange",
@@ -82,17 +83,19 @@ def show_smooth_graphs():
     plt.xlabel("x")
     plt.ylabel("error")
 
-    draw_graph(
+    plt.plot(
         smooth["uniform"]["error"].x,
         smooth["uniform"]["error"].y,
         color="red",
         label="NewtonFrontward Interpolation error",
+        linestyle="-",
     )
-    draw_graph(
+    plt.plot(
         smooth["cheb"]["error"].x,
         smooth["cheb"]["error"].y,
         color="blue",
         label="Newton Chebyshev interpolation error",
+        linestyle="-",
     )
 
     plt.grid()
@@ -100,58 +103,47 @@ def show_smooth_graphs():
 
     plt.savefig(save_directory_smooth_name / "Actual smooth function error.png")
 
-    # Figure 4 knots count vs max error (Uniform)
+    # Figure 4 knots count vs max error
 
-    plt.figure("Actual smooth function max error(Uniform)")
-    plt.title("Максимальная ошибка интерполяции гладкой функции от шага сетки")
+    plt.figure("Actual smooth function max error")
+    plt.title("Максимальная ошибка интерполяции гладкой функции от числа узлов")
     plt.xlabel("knots count")
     plt.ylabel("max error")
 
-    draw_graph(
+    plt.semilogy(
         smooth["uniform"]["max_error"].x,
         smooth["uniform"]["max_error"].y,
         color="red",
         label="NewtonFrontward Interpolation max error",
+        linestyle="-",
     )
 
-    draw_knots(
+    plt.scatter(
         smooth["uniform"]["max_error"].x,
         smooth["uniform"]["max_error"].y,
         color="orange",
     )
 
-    plt.legend()
-    plt.grid()
-
-    plt.savefig(
-        save_directory_smooth_name / "Actual smooth function max error Uniform.png"
-    )
-
-    # Figure 5 knots count vs max error (Chebyshev)
-
-    plt.figure("Actual smooth function max error(Chebyshev)")
-    plt.title("Максимальная ошибка интерполяции гладкой функции от шага сетки")
-    plt.xlabel("knots count")
-    plt.ylabel("max error")
-
-    draw_graph(
+    plt.semilogy(
         smooth["cheb"]["max_error"].x,
         smooth["cheb"]["max_error"].y,
         color="blue",
         label="Newton Chebyshev Interpolation max error",
+        linestyle="-",
     )
 
-    draw_knots(
+    plt.scatter(
         smooth["cheb"]["max_error"].x,
         smooth["cheb"]["max_error"].y,
-        color="orange",
+        color="pink",
     )
 
     plt.legend()
     plt.grid()
 
     plt.savefig(
-        save_directory_smooth_name / "Actual smooth function max error Chebyshev.png"
+        save_directory_smooth_name
+        / "Actual smooth function max error Uniform and Chebyshev.png"
     )
 
     plt.show()

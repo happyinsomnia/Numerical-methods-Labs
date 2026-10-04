@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-from plotting import draw_graph, draw_knots
 from data import non_smooth, save_directory_non_smooth_name
 import os
 
@@ -12,21 +11,21 @@ def show_non_smooth_graphs():
     plt.xlabel("x")
     plt.ylabel("y")
 
-    draw_graph(
+    plt.semilogy(
         non_smooth["actual"].x,
         non_smooth["actual"].y,
         color="red",
         label="Actual function",
         linestyle="-",
     )
-    draw_graph(
+    plt.semilogy(
         non_smooth["uniform"]["newton"].x,
         non_smooth["uniform"]["newton"].y,
         color="blue",
         label="NewtonFrontward Interpolation",
         linestyle="--",
     )
-    draw_knots(
+    plt.scatter(
         non_smooth["uniform"]["knots"].x,
         non_smooth["uniform"]["knots"].y,
         color="orange",
@@ -47,21 +46,21 @@ def show_non_smooth_graphs():
     plt.xlabel("x")
     plt.ylabel("y")
 
-    draw_graph(
+    plt.plot(
         non_smooth["actual"].x,
         non_smooth["actual"].y,
         color="red",
         label="Actual function",
         linestyle="-",
     )
-    draw_graph(
+    plt.plot(
         non_smooth["cheb"]["newton"].x,
         non_smooth["cheb"]["newton"].y,
         color="green",
         label="Newton Chebyshev Interpolation",
         linestyle="--",
     )
-    draw_knots(
+    plt.scatter(
         non_smooth["cheb"]["knots"].x,
         non_smooth["cheb"]["knots"].y,
         color="orange",
@@ -81,17 +80,19 @@ def show_non_smooth_graphs():
     plt.xlabel("x")
     plt.ylabel("error")
 
-    draw_graph(
+    plt.plot(
         non_smooth["uniform"]["error"].x,
         non_smooth["uniform"]["error"].y,
         color="red",
         label="NewtonFrontward Interpolation error",
+        linestyle="-",
     )
-    draw_graph(
+    plt.plot(
         non_smooth["cheb"]["error"].x,
         non_smooth["cheb"]["error"].y,
         color="blue",
         label="Newton Chebyshev interpolation error",
+        linestyle="-",
     )
 
     plt.grid()
@@ -100,49 +101,37 @@ def show_non_smooth_graphs():
     plt.savefig(save_directory_non_smooth_name / "Actual non-smooth function error.png")
 
     # Figure 4 knots count vs max error (Uniform)
-    plt.figure("Knots count vs max error (Uniform)")
+    plt.figure("Knots count vs max error")
     plt.title("Зависимость ошибки от количества узлов негладкая функция")
     plt.xlabel("Knots count")
     plt.ylabel("Max error")
 
-    draw_graph(
+    plt.semilogy(
         non_smooth["uniform"]["max_error"].x,
         non_smooth["uniform"]["max_error"].y,
         color="red",
         label="NewtonFrontward Interpolation max error",
+        linestyle="-",
     )
 
-    draw_knots(
+    plt.scatter(
         non_smooth["uniform"]["max_error"].x,
         non_smooth["uniform"]["max_error"].y,
         color="orange",
     )
 
-    plt.legend()
-    plt.grid()
-
-    plt.savefig(
-        save_directory_non_smooth_name
-        / "Actual non-smooth function max error Uniform.png"
-    )
-
-    # Figure 5 knots count vs max error (Chebyshev)
-    plt.figure("Knots count vs max error (Chebyshev)")
-    plt.title("Зависимость ошибки от количества узлов негладкая функция")
-    plt.xlabel("Knots count")
-    plt.ylabel("Max error")
-
-    draw_graph(
+    plt.semilogy(
         non_smooth["cheb"]["max_error"].x,
         non_smooth["cheb"]["max_error"].y,
         color="blue",
         label="Newton Chebyshev interpolation max error",
+        linestyle="-",
     )
 
-    draw_knots(
+    plt.scatter(
         non_smooth["cheb"]["max_error"].x,
         non_smooth["cheb"]["max_error"].y,
-        color="orange",
+        color="pink",
     )
 
     plt.legend()
@@ -150,6 +139,7 @@ def show_non_smooth_graphs():
 
     plt.savefig(
         save_directory_non_smooth_name
-        / "Actual non-smooth function max error Chebyshev.png"
+        / "Actual non-smooth function max error Uniform and Chebyshev.png"
     )
+
     plt.show()

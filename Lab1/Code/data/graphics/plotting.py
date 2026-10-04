@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-import numpy as np
 from dataclasses import dataclass
 
 
@@ -25,11 +23,3 @@ def pars(filename):
         y_values.append(float(y))
 
     return GraphData(x_values, y_values)
-
-
-def draw_graph(x, y, color="blue", label="graph", linestyle="-", linewidth=2):
-    plt.plot(x, y, color=color, label=label, linestyle=linestyle, linewidth=linewidth)
-
-
-def draw_knots(x, y, color="red", label="knots", size=40):
-    plt.scatter(x, y, color=color, label=label, s=size)
