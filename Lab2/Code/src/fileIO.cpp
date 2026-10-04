@@ -6,6 +6,7 @@
 #include <iostream>
 #include <error.hpp>
 #include <filesystem>
+#include <limits>
 
 void WriteData(const std::string &filename,
                double a,
@@ -82,6 +83,33 @@ void WriteData(const std::string &filename,
         double calculatedValue = TrapezoidalRule(a, b, N, func);
 
         file << AbsoluteError(actualValue, calculatedValue) << ',' << h << '\n';
+    }
+
+    // Graphic 4: algebraic degree of accuracy
+
+    file << '\n'
+         << "degree vs absolute_error" << '\n';
+
+    constexpr int N = 1;
+    for (int degree = 0;; degree++)
+    {
+        auto polynomial = [degree](double x)
+        {
+            return std::pow(x, degree);
+        };
+
+        double exactValue = (std::pow(b, degree + 1) - std::pow(a, degree + 1)) / (degree + 1);
+        double approximation = method(a, b, N, polynomial);
+        double error = AbsoluteError(exactValue, approximation);
+        double tolerance = 100 * std::numeric_limits<double>::epsilon() *
+                           std::fmax(1.0, std::fmax(std::abs(exactValue), std::abs(approximation)));
+
+        file << degree << ',' << error << '\n';
+
+        if (error > tolerance)
+        {
+            break;
+        }
     }
 
     file.close();
