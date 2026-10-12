@@ -24,27 +24,23 @@ std::vector<double> FiniteDifference(const std::vector<double> &y)
 
 std::vector<double> DividedDifference(const Grid &grid)
 {
-    std::vector<std::vector<double>> diff;
+    if (grid.x.size() != grid.y.size())
+        throw std::invalid_argument("DividedDifference requires matching x and y sizes");
 
-    diff.push_back(grid.y);
+    std::vector<double> coefficients = grid.y;
 
-    for (size_t j = 1; j < grid.y.size(); j++)
+    for (size_t order = 1; order < coefficients.size(); order++)
     {
-        std::vector<double> column;
-        for (size_t i = 0; i < grid.y.size() - j; i++)
+        for (size_t i = coefficients.size(); i > order; i--)
         {
-            double value = (diff[j - 1][i + 1] - diff[j - 1][i]) / (grid.x[i + j] - grid.x[i]);
-            column.push_back(value);
+            const size_t index = i - 1;
+            const double denominator = grid.x[index] - grid.x[index - order];
+            if (denominator == 0.0)
+                throw std::invalid_argument("DividedDifference requires distinct x values");
+
+            coefficients[index] =
+                (coefficients[index] - coefficients[index - 1]) / denominator;
         }
-
-        diff.push_back(column);
-    }
-
-    std::vector<double> coefficients;
-
-    for (size_t i = 0; i < grid.y.size(); i++)
-    {
-        coefficients.push_back(diff[i][0]);
     }
 
     return coefficients;
