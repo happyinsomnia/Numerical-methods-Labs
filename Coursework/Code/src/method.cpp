@@ -2,6 +2,17 @@
 
 namespace methodEuler
 {
+    struct State
+    {
+        double y1; // y
+        double y2; // y'
+    };
+
+    State derivative(double x, const State &y)
+    {
+        return {y.y2, -pow(x, 3) - 2 * x * x - x + 2 - (1 + x) * y.y2 + (2 + x) * y.y1};
+    }
+
     double methodEuler(double x_k, double y_k, double h, std::function<double(double, double)> func)
     {
         return y_k + h / 2 * func(x_k, y_k);

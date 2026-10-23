@@ -3,6 +3,10 @@
 
 namespace methodEuler
 {
+    struct State;
+
+    State derivative(double x, const State &y);
+
     /// @brief Метод Эйлера с шагом h/2
     /// @param x_k
     /// @param y_k

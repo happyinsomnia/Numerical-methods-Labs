@@ -4,6 +4,7 @@
 
 int main()
 {
+    // затраты в курсовой работе(графики)
     double A = 1.0;
     double B = 8.0;
     double alpha_0 = -1.0;
