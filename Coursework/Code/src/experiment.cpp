@@ -4,123 +4,176 @@
 #include <filesystem>
 #include <fstream>
 #include <format>
+#include <chrono>
 #include <error.hpp>
 
 void RunExperiments(const std::string path,
                     double a,
                     double b,
                     const DifferentialEquation &equations,
-                    const BoundaryConditions &conditions)
+                    const BoundaryConditions &conditions,
+                    double y1,
+                    double y2)
 {
-    // First graphic numerical y
     std::filesystem::create_directories(path);
 
-    std::string numericalPath = "Numerical_function.txt";
-    std::string errorNumericalPath = "Numerical_function_error.txt";
+    std::string fileName = "experiment.csv";
 
-    std::ofstream fileNumerical(path + numericalPath);
-    std::ofstream fileNumericalError(path + errorNumericalPath);
+    std::ofstream fileExperiment(path + fileName);
 
-    if (!fileNumerical.is_open())
+    if (!fileExperiment.is_open())
     {
-        std::cerr << "Can't open the file " + numericalPath << std::endl;
+        std::cerr << "Can't create file: " << fileName << " along the path: " << path << std::endl;
         return;
     }
 
-    if (!fileNumericalError.is_open())
+    fileExperiment << "ModifiedMethodEuler: " << std::endl;
+
+    // Graphic 1: x vs y (modifiedMethodEuler):
+
+    fileExperiment << "Graphic 1: x vs y " << std::endl;
+
+    double _h = 0.001;
+
+    auto modifiedResult = modified_method_Euler::solveODYSecondOrderByModifiedEuler(a, b, _h, y1, y2);
+
+    double x = a;
+
+    for (const auto &state : modifiedResult)
     {
-        std::cerr << "Can't open the file " + errorNumericalPath << std::endl;
-        return;
+        fileExperiment << x << ' ' << state.y1 << '\n';
+        x += _h;
     }
 
-    fileNumerical << "x vs yMethod \n";
-    fileNumericalError << "x vs error \n";
+    fileExperiment << '\n';
 
-    auto y_method = factorization_method::factorizationMethod(a, b, 0.001, equations, conditions);
+    // Graphic 2: x vs error
 
-    auto beginIter = y_method.begin();
+    fileExperiment << "Graphic 2: x vs error " << std::endl;
 
-    for (double x = a; x <= b; x += 0.001, ++beginIter)
+    x = a;
+
+    for (const auto &state : modifiedResult)
     {
-        fileNumerical << x << ' ' << *beginIter << '\n';
-
-        fileNumericalError << x << ' ' << stepError(*beginIter, exactSolution(x)) << '\n';
+        fileExperiment << x << ' ' << globalError(exactSolution(x), state.y1) << std::endl;
+        x += _h;
     }
 
-    fileNumerical.close();
-    fileNumericalError.close();
+    fileExperiment << std::endl;
 
-    // Second graphic h vs error
+    // Graphic 3: h vs error
 
-    std::string stepErrorPath = "h_vs_error.txt";
+    fileExperiment << "Graphic 3: h vs error " << std::endl;
 
-    std::ofstream fileStepError(path + stepErrorPath);
-
-    if (!fileStepError.is_open())
+    for (double h = 0.4; h >= 1e-4; h /= 2.0)
     {
-        std::cerr << "Can't open the file " + stepErrorPath << std::endl;
-        return;
+        modifiedResult = modified_method_Euler::solveODYSecondOrderByModifiedEuler(a, b, h, y1, y2);
+
+        std::vector<double> values;
+        values.reserve(modifiedResult.size());
+
+        std::transform(modifiedResult.begin(), modifiedResult.end(), std::back_inserter(values), [](const auto &state)
+                       { return state.y1; });
+
+        auto exact = buildExactSolution(a, b, h, exactSolution);
+        fileExperiment << h << ' ' << maxError(exact, values) << std::endl;
     }
 
-    fileStepError << "h vs error \n";
+    fileExperiment << std::endl;
 
-    for (int N = 2; N < 10000; N *= 2)
+    // Graphic 4: time(sec) vs error
+
+    fileExperiment << "Graphic 4: time vs error " << std::endl;
+
+    for (double h = 0.4; h >= 1e-4; h /= 2.0)
     {
-        double h = (b - a) / N;
+        auto start = std::chrono::steady_clock::now();
 
-        y_method = factorizationMethod(a, b, h, equations, conditions);
+        modifiedResult = modified_method_Euler::solveODYSecondOrderByModifiedEuler(a, b, h, y1, y2);
 
-        auto yActual = buildExactSolution(a, b, h, exactSolution);
-        double error = norm(yActual, y_method);
+        auto end = std::chrono::steady_clock::now();
+        double elapsed = std::chrono::duration<double>(end - start).count();
 
-        fileStepError << h << ' ' << error << '\n';
+        std::vector<double> values;
+        values.reserve(modifiedResult.size());
+
+        std::transform(modifiedResult.begin(), modifiedResult.end(), std::back_inserter(values), [](const auto &state)
+                       { return state.y1; });
+
+        auto exact = buildExactSolution(a, b, h, exactSolution);
+
+        fileExperiment << elapsed << ' ' << maxError(exact, values) << std::endl;
     }
 
-    fileStepError.close();
+    fileExperiment << std::endl;
 
-    // Third graphic delta vs error
+    // Factorization Method:
 
-    std::string deltaErrorPath = "delta_vs_error.txt";
+    fileExperiment << "FactorizationMethod: " << std::endl;
 
-    std::ofstream fileDeltaError(path + deltaErrorPath);
+    // Graphic 1: x vs y (factorization method):
 
-    if (!fileDeltaError.is_open())
+    fileExperiment << "Graphic 1: x vs y " << std::endl;
+
+    auto factorizationResult = factorization_method::factorizationMethod(a, b, _h, equations, conditions);
+
+    x = a;
+
+    for (const auto &value : factorizationResult)
     {
-        std::cerr << "Can't open the file " + deltaErrorPath << std::endl;
-        return;
+        fileExperiment << x << ' ' << value << '\n';
+        x += _h;
     }
 
-    double h = 0.001;
+    fileExperiment << '\n';
 
-    auto exact = buildExactSolution(a, b, h, exactSolution);
+    // Graphic 2: x vs error
 
-    for (double delta = 1e-1; delta >= 1e-11; delta /= 10)
+    fileExperiment << "Graphic 2: x vs error " << std::endl;
+
+    x = a;
+
+    for (const auto &value : factorizationResult)
     {
-        y_method = factorizationMethod(a, b, h, equations, conditions, delta);
-
-        double error = norm(exact, y_method);
-
-        fileDeltaError << delta << ' ' << error << '\n';
+        fileExperiment << x << ' ' << globalError(exactSolution(x), value) << std::endl;
+        x += _h;
     }
 
-    fileDeltaError.close();
+    fileExperiment << std::endl;
 
-    // Four graphic Actual function
+    // Graphic 3: h vs error
 
-    std::string actualFunctionPath = "actual_function.txt";
-    std::ofstream fileActualFunction(path + actualFunctionPath);
+    fileExperiment << "Graphic 3: h vs error " << std::endl;
 
-    if (!fileActualFunction.is_open())
+    for (double h = 0.4; h >= 1e-4; h /= 2.0)
     {
-        std::cerr << "Can't open the file " + actualFunctionPath << std::endl;
-        return;
+        factorizationResult = factorization_method::factorizationMethod(a, b, h, equations, conditions);
+
+        auto exact = buildExactSolution(a, b, h, exactSolution);
+        fileExperiment << h << ' ' << maxError(exact, factorizationResult) << std::endl;
     }
 
-    fileActualFunction << "x vs y \n";
-    for (double step = a; step <= b; step += 0.001)
+    fileExperiment << std::endl;
+
+    // Graphic 4: time(sec) vs error
+
+    fileExperiment << "Graphic 4: time vs error " << std::endl;
+
+    for (double h = 0.4; h >= 1e-4; h /= 2.0)
     {
-        fileActualFunction << step << ' ' << exactSolution(step) << std::endl;
+        auto start = std::chrono::steady_clock::now();
+
+        factorizationResult = factorization_method::factorizationMethod(a, b, h, equations, conditions);
+
+        auto end = std::chrono::steady_clock::now();
+        double elapsed = std::chrono::duration<double>(end - start).count();
+
+        auto exact = buildExactSolution(a, b, h, exactSolution);
+
+        fileExperiment << elapsed << ' ' << maxError(exact, factorizationResult) << std::endl;
     }
 
-    fileActualFunction.close();
+    fileExperiment << std::endl;
+
+    fileExperiment.close();
 }

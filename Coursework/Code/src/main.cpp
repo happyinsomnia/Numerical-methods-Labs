@@ -1,10 +1,15 @@
 #include <iostream>
 #include <method.hpp>
+#include <cmath>
 #include <experiment.hpp>
 
 int main()
 {
     // затраты в курсовой работе(графики)
+    // TODO: графики: 1) точное решение от численного
+    // TODO: 2) график ошибки методов
+    // TODO: 3) h vs error
+    // TODO: 4) время от ошибки
     double A = 1.0;
     double B = 8.0;
     double alpha_0 = -1.0;
@@ -22,6 +27,6 @@ int main()
 
     BoundaryConditions conditions(alpha_0, alpha_1, beta_0, beta_1, A, B);
 
-    RunExperiments("../data/plot_data/", a, b, equations, conditions);
+    RunExperiments("../data/plot_data/", a, b, equations, conditions, 1.0, 2.0);
     return 0;
 }

@@ -1,27 +1,22 @@
 #pragma once
 #include <functional>
 
-namespace methodEuler
+namespace modified_method_Euler
 {
-    struct State;
+    struct State
+    {
+        double y1; // y
+        double y2; // y'
+    };
 
-    State derivative(double x, const State &y);
+    State
+    derivative(double x, const State &y);
 
-    /// @brief Метод Эйлера с шагом h/2
-    /// @param x_k
-    /// @param y_k
-    /// @param h
-    /// @param func
-    /// @return значение y, полученное методом Эйлера
-    double methodEuler(double x_k, double y_k, double h, std::function<double(double, double)> func);
+    State methodEuler(double x, const State &y, double h);
 
-    /// @brief Модифицированный метод Эйлера(метод средней точки)
-    /// @param x_k
-    /// @param y_k
-    /// @param h
-    /// @param func
-    /// @return значение y, полученное модифицированным методом
-    double modifiedEulerMethod(double x_k, double y_k, double h, std::function<double(double, double)> func);
+    State modifiedEulerMethod(double x, const State &y, double h);
+
+    std::vector<State> solveODYSecondOrderByModifiedEuler(double a, double b, double h, double y1, double y2);
 }
 
 namespace factorization_method

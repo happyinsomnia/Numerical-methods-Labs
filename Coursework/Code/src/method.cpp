@@ -1,27 +1,47 @@
 #include <method.hpp>
+#include <cmath>
+#include <stdexcept>
+#include <algorithm>
 
-namespace methodEuler
+namespace modified_method_Euler
 {
-    struct State
-    {
-        double y1; // y
-        double y2; // y'
-    };
 
     State derivative(double x, const State &y)
     {
         return {y.y2, -pow(x, 3) - 2 * x * x - x + 2 - (1 + x) * y.y2 + (2 + x) * y.y1};
     }
 
-    double methodEuler(double x_k, double y_k, double h, std::function<double(double, double)> func)
+    State methodEuler(double x, const State &y, double h)
     {
-        return y_k + h / 2 * func(x_k, y_k);
+        State f = derivative(x, y);
+
+        return {
+            y.y1 + h / 2.0 * f.y1,
+            y.y2 + h / 2.0 * f.y2};
     }
 
-    double modifiedEulerMethod(double x_k, double y_k, double h, std::function<double(double, double)> func)
+    State modifiedEulerMethod(double x, const State &y, double h)
     {
-        return y_k + h * func(x_k + h / 2,
-                              methodEuler(x_k, y_k, h, func));
+        State mid = methodEuler(x, y, h);
+        State f_mid = derivative(x + h / 2.0, mid);
+
+        return {
+            y.y1 + h * f_mid.y1,
+            y.y2 + h * f_mid.y2};
+    }
+    std::vector<State> solveODYSecondOrderByModifiedEuler(double a, double b, double h, double y1, double y2)
+    {
+        std::vector<State> result;
+
+        result.push_back({y1, y2});
+
+        for (double x = a + h; x <= b; x += h)
+        {
+            State next = modifiedEulerMethod(x, result.back(), h);
+            result.push_back(next);
+        }
+
+        return result;
     }
 }
 

@@ -7,4 +7,6 @@ void RunExperiments(std::string path,
                     double a,
                     double b,
                     const DifferentialEquation &equations,
-                    const BoundaryConditions &conditions);
+                    const BoundaryConditions &conditions,
+                    double y1,
+                    double y2);
