@@ -109,7 +109,7 @@ $y_(k+1) = y_k + h f(x_k + frac(h, 2), y_k + h/2 f(x_k, y_k)$
 
 Это можно переписать так же как:
 
-#text(size: 18pt)[$cases(y_(k + 1/2) = y_k + h/2 f(x_k,y_k), y_(k+1) = y_k + h f(x_(k+1/2), y_(k + 1/2))))$]
+#text(size: 18pt)[$cases(y_(k + 1/2) = y_k + h/2 f(x_k,y_k), y_(k+1) = y_k + h f(x_(k+1/2), y_(k + 1/2)))$]
 
 где $x_(k+1/2) = x_k + h/2$
 
