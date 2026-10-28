@@ -65,7 +65,7 @@ void RunExperiments(const std::string path,
 
     fileExperiment << "Graphic 3: h vs error " << std::endl;
 
-    for (double h = 0.4; h >= 1e-4; h /= 2.0)
+    for (double h = 0.5; h >= 1e-4; h /= 2.0)
     {
         modifiedResult = modified_method_Euler::solveODYSecondOrderByModifiedEuler(a, b, h, y1, y2);
 
@@ -85,7 +85,7 @@ void RunExperiments(const std::string path,
 
     fileExperiment << "Graphic 4: time vs error " << std::endl;
 
-    for (double h = 0.4; h >= 1e-4; h /= 2.0)
+    for (double h = 0.5; h >= 1e-4; h /= 2.0)
     {
         auto start = std::chrono::steady_clock::now();
 
@@ -145,7 +145,7 @@ void RunExperiments(const std::string path,
 
     fileExperiment << "Graphic 3: h vs error " << std::endl;
 
-    for (double h = 0.4; h >= 1e-4; h /= 2.0)
+    for (double h = 0.5; h >= 1e-4; h /= 2.0)
     {
         factorizationResult = factorization_method::factorizationMethod(a, b, h, equations, conditions);
 
@@ -159,7 +159,7 @@ void RunExperiments(const std::string path,
 
     fileExperiment << "Graphic 4: time vs error " << std::endl;
 
-    for (double h = 0.4; h >= 1e-4; h /= 2.0)
+    for (double h = 0.5; h >= 1e-4; h /= 2.0)
     {
         auto start = std::chrono::steady_clock::now();
 

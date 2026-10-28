@@ -119,10 +119,10 @@ namespace factorization_method
 
         y_method.push_back((conditions.B - conditions.beta_1 * t_method.back().second) / (conditions.beta_0 + conditions.beta_1 * s_method.back().second) + delta);
 
-        auto s_iter = --s_method.end();
-        auto t_iter = --t_method.end();
+        auto s_iter = s_method.rbegin();
+        auto t_iter = t_method.rbegin();
 
-        for (double x = b; x - h >= a && s_iter != --s_method.begin(); x -= h, --s_iter, --t_iter)
+        for (double x = b; x - h >= a && s_iter != s_method.rend(); x -= h, ++s_iter, ++t_iter)
         {
             double y = modifiedEulerMethodBackwards(x, y_method.back(), s_iter->second, s_iter->first, t_iter->second, t_iter->first, h, [](double y, double s, double t)
                                                     { return s * y + t; });
