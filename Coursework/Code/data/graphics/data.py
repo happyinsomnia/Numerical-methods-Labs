@@ -1,14 +1,16 @@
 from pathlib import Path
-from parse import parse
 
-filepathNumericalSolution = Path("../plot_data/Numerical_function.txt")
-filepathNumericalSolutionError = Path("../plot_data/Numerical_function_error.txt")
-filepathStepError = Path("../plot_data/h_vs_error.txt")
-filepathDeltaError = Path("../plot_data/delta_vs_error.txt")
-filepathActualFunction = Path("../plot_data/actual_function.txt")
+from parse import ExperimentData, parse, parse_points
 
-numericalSolution = parse(filepathNumericalSolution)
-numericalSolutionError = parse(filepathNumericalSolutionError)
-stepError = parse(filepathStepError)
-deltaError = parse(filepathDeltaError)
-actualFunction = parse(filepathActualFunction)
+
+PLOT_DATA_DIR = Path(__file__).resolve().parent.parent / "plot_data"
+EXPERIMENT_FILE = PLOT_DATA_DIR / "experiment.csv"
+EXACT_FUNCTION_FILE = PLOT_DATA_DIR / "exact_function.csv"
+
+
+def load_experiments() -> list[ExperimentData]:
+    return parse(EXPERIMENT_FILE)
+
+
+def load_exact_function() -> list[tuple[float, float]]:
+    return parse_points(EXACT_FUNCTION_FILE)

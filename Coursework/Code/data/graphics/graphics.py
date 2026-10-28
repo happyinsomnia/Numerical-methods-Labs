@@ -1,81 +1,89 @@
-import os
+from pathlib import Path
+
 import matplotlib.pyplot as plt
-import numpy as np
-from data import *
+
+from data import load_exact_function, load_experiments
+from parse import ExperimentData, GraphData
 
 
-def show_graphics():
-    dirname = "png/"
+_GRAPH_SETTINGS = {
+    1: ("Actual function and approximate function.png", "Решения методов", False, None),
+    2: ("Approximate function error.png", "Ошибка по x", False, None),
+    3: ("Step dependence on error.png", "Зависимость ошибки от шага h", True, "o"),
+    4: ("Time dependence on error.png", "Зависимость ошибки от времени", True, "o"),
+}
 
-    os.makedirs(dirname, exist_ok=True)
 
-    # Figure 1 actual function and approximate solution
-    plt.figure("Actual function and approximate solution")
-    plt.title("График точного и численного решения")
-    plt.xlabel("x")
-    plt.ylabel("y")
+def _plot_graph(
+    experiments: list[ExperimentData],
+    graph_number: int,
+    filename: str,
+    title: str,
+    use_log_scale: bool,
+    marker: str | None,
+    output_dir: Path,
+    exact_points: list[tuple[float, float]] | None = None,
+) -> None:
+    figure, axes = plt.subplots()
+    axes.set_title(title)
 
-    y_actual = [y for x, y in actualFunction]
+    if graph_number == 1 and exact_points is not None:
+        exact_x, exact_y = zip(*exact_points)
+        axes.plot(
+            exact_x,
+            exact_y,
+            color="black",
+            linestyle="-",
+            label="Точное решение",
+        )
 
-    x_method = [x for x, y in numericalSolution]
-    y_method = [y for x, y in numericalSolution]
+    plotted_graph: GraphData | None = None
+    method_colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+    for index, experiment in enumerate(experiments):
+        graph = experiment.graphs.get(graph_number)
+        if graph is None:
+            continue
 
-    plt.plot(x_method, y_actual, label="Точное решение", color="blue", linestyle="-")
-    plt.plot(x_method, y_method, label="Численное решение", color="red", linestyle="--")
-    plt.grid()
-    plt.legend()
+        x_values, y_values = zip(*graph.points)
+        axes.plot(
+            x_values,
+            y_values,
+            color=method_colors[index % len(method_colors)],
+            marker=marker,
+            linestyle="--" if graph_number == 1 else "-",
+            label=experiment.method,
+        )
+        plotted_graph = graph
 
-    plt.savefig(dirname + "Actual function and approximate function.png")
+    if plotted_graph is not None:
+        axes.set_xlabel(plotted_graph.x_label)
+        axes.set_ylabel(plotted_graph.y_label)
 
-    # Figure 2 approximate solution error
+    if use_log_scale:
+        axes.set_xscale("log")
+        axes.set_yscale("log")
 
-    plt.figure("Approximate function error")
-    plt.title("Ошибка аппроксимации")
-    plt.xlabel("x")
-    plt.ylabel("error")
+    axes.grid(True, which="both" if use_log_scale else "major")
+    axes.legend()
+    figure.savefig(output_dir / filename, bbox_inches="tight")
 
-    x_method = [x for x, y in numericalSolutionError]
-    error = [y for x, y in numericalSolutionError]
 
-    plt.plot(x_method, error, label="Ошибка", color="red", linestyle="-")
-    plt.grid()
-    plt.legend()
+def show_graphics() -> None:
+    output_dir = Path(__file__).resolve().parent / "png"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    experiments = load_experiments()
+    exact_function = load_exact_function()
 
-    plt.savefig(dirname + "Approximate function error.png")
-
-    # Figure 3 h vs error
-
-    plt.figure("Step dependence on error")
-    plt.title("Зависимость шага от ошибки(log-log)")
-    plt.xlabel("h")
-    plt.ylabel("error")
-
-    h = np.array([x for x, y in stepError])
-    error = [y for x, y in stepError]
-
-    plt.loglog(
-        h, error, marker="o", label="Максимальная ошибка", color="red", linestyle="-"
-    )
-    plt.loglog(h, h**2, label=r"$\mathcal{O}(h^2)$", color="purple", linestyle="--")
-    plt.grid()
-    plt.legend()
-
-    plt.savefig(dirname + "Step dependence on error.png")
-
-    # Figure 4 Delta dependence on error
-
-    plt.figure("Delta dependence on error")
-    plt.title("Зависимость погрешности в исходных данных от ошибки(log-log)")
-    plt.xlabel("δ")
-    plt.ylabel("error")
-
-    delta = [x for x, y in deltaError]
-    error = [y for x, y in deltaError]
-
-    plt.loglog(delta, error, label="Максимальная ошибка", color="blue", linestyle="-")
-    plt.grid()
-    plt.legend()
-
-    plt.savefig(dirname + "Delta dependence on error.png")
+    for graph_number, (filename, title, use_log_scale, marker) in _GRAPH_SETTINGS.items():
+        _plot_graph(
+            experiments,
+            graph_number,
+            filename,
+            title,
+            use_log_scale,
+            marker,
+            output_dir,
+            exact_points=exact_function if graph_number == 1 else None,
+        )
 
     plt.show()

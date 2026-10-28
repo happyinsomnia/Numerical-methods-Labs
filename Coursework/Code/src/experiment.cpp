@@ -176,4 +176,25 @@ void RunExperiments(const std::string path,
     fileExperiment << std::endl;
 
     fileExperiment.close();
+
+    // Exact function:
+
+    std::string fileNameExactFunction = "exact_function.csv";
+
+    std::ofstream fileExactFunction(path + fileNameExactFunction);
+
+    if (!fileExactFunction.is_open())
+    {
+        std::cerr << "Can't create file: " << fileNameExactFunction << " along the path: " << path << std::endl;
+        return;
+    }
+
+    fileExactFunction << "x vs y" << std::endl;
+
+    for (double x = a; x <= b; x += _h)
+    {
+        fileExactFunction << x << ' ' << exactSolution(x) << std::endl;
+    }
+
+    fileExactFunction.close();
 }
