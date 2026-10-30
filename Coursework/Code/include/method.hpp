@@ -9,8 +9,7 @@ namespace modified_method_Euler
         double y2; // y'
     };
 
-    State
-    derivative(double x, const State &y);
+    State derivative(double x, const State &y);
 
     State methodEuler(double x, const State &y, double h);
 
