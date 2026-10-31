@@ -6,6 +6,20 @@
 #include <format>
 #include <error.hpp>
 
+namespace
+{
+std::vector<double> buildExactValues(double a, double step, std::size_t count)
+{
+    std::vector<double> exactValues;
+    exactValues.reserve(count);
+
+    for (std::size_t i = 0; i < count; ++i)
+        exactValues.push_back(exactSolution(a + i * step));
+
+    return exactValues;
+}
+}
+
 void RunExperiments(const std::string path,
                     double a,
                     double b,
@@ -36,15 +50,15 @@ void RunExperiments(const std::string path,
     fileNumerical << "x vs yMethod \n";
     fileNumericalError << "x vs error \n";
 
-    auto y_method = factorizationMethod(a, b, 0.001, equations, conditions);
+    const double h = 0.001;
+    auto y_method = factorizationMethod(a, b, h, equations, conditions);
+    const auto exact = buildExactValues(a, 4.0 * h, y_method.size());
 
-    auto beginIter = y_method.begin();
-
-    for (double a = 0; a <= b; a += 0.001, ++beginIter)
+    for (std::size_t i = 0; i < y_method.size(); ++i)
     {
-        fileNumerical << a << ' ' << *beginIter << '\n';
-
-        fileNumericalError << a << ' ' << stepError(*beginIter, exactSolution(a)) << '\n';
+        const double x = a + i * 4.0 * h;
+        fileNumerical << x << ' ' << y_method[i] << '\n';
+        fileNumericalError << x << ' ' << stepError(y_method[i], exactSolution(x)) << '\n';
     }
 
     fileNumerical.close();
@@ -64,16 +78,16 @@ void RunExperiments(const std::string path,
 
     fileStepError << "h vs error \n";
 
-    for (int N = 2; N < 10000; N *= 2)
+    for (int N = 4; N < 10000; N *= 2)
     {
-        double h = (b - a) / N;
+        const double step = (b - a) / N;
 
-        y_method = factorizationMethod(a, b, h, equations, conditions);
+        y_method = factorizationMethod(a, b, step, equations, conditions);
 
-        auto yActual = buildExactSolution(a, b, h, exactSolution);
+        auto yActual = buildExactValues(a, 4.0 * step, y_method.size());
         double error = norm(yActual, y_method);
 
-        fileStepError << h << ' ' << error << '\n';
+        fileStepError << step << ' ' << error << '\n';
     }
 
     fileStepError.close();
@@ -89,10 +103,6 @@ void RunExperiments(const std::string path,
         std::cerr << "Can't open the file " + deltaErrorPath << std::endl;
         return;
     }
-
-    double h = 0.001;
-
-    auto exact = buildExactSolution(a, b, h, exactSolution);
 
     for (double delta = 1e-1; delta >= 1e-11; delta /= 10)
     {
@@ -117,9 +127,10 @@ void RunExperiments(const std::string path,
     }
 
     fileActualFunction << "x vs y \n";
-    for (double step = a; step <= b; step += 0.001)
+    for (std::size_t i = 0; i < y_method.size(); ++i)
     {
-        fileActualFunction << step << ' ' << exactSolution(step) << std::endl;
+        const double x = a + i * 4.0 * h;
+        fileActualFunction << x << ' ' << exactSolution(x) << '\n';
     }
 
     fileActualFunction.close();

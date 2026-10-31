@@ -2,6 +2,7 @@
 #include <cmath>
 #include <stdexcept>
 #include <algorithm>
+#include <limits>
 
 // for function s
 double methodEuler(double x_k, double s_k, double h, std::function<double(double, double)> func)
@@ -42,50 +43,62 @@ std::vector<double> factorizationMethod(double a,
                                         const BoundaryConditions &conditions,
                                         const double delta)
 {
-    std::vector<std::pair<double, double>> s_method;
-    std::vector<std::pair<double, double>> t_method;
-    std::vector<double> y_method;
+    if (!std::isfinite(a) || !std::isfinite(b) || !std::isfinite(h) || h <= 0.0 || b <= a)
+        throw std::invalid_argument("a and b must define a finite interval, and h must be positive.");
 
-    // first element is half , second is whole on k step
-    s_method.push_back(std::make_pair(0.0, -(conditions.alpha_0 / conditions.alpha_1)));
-    t_method.push_back(std::make_pair(0.0, conditions.A / conditions.alpha_1));
+    const double fineStepCountValue = (b - a) / h;
+    if (!std::isfinite(fineStepCountValue) ||
+        fineStepCountValue >= static_cast<double>(std::numeric_limits<long long>::max()))
+        throw std::invalid_argument("The interval is too large for the requested step.");
 
-    //* s^h and t^h
-    for (double x = a; x + h <= b; x += h)
+    const long long roundedFineStepCount = std::llround(fineStepCountValue);
+    const double alignmentTolerance = 64.0 * std::numeric_limits<double>::epsilon() *
+                                      std::max(1.0, std::abs(fineStepCountValue));
+    if (roundedFineStepCount < 4 || roundedFineStepCount % 4 != 0 ||
+        std::abs(fineStepCountValue - roundedFineStepCount) > alignmentTolerance)
+        throw std::invalid_argument("The interval length must be an integer multiple of 4h.");
+
+    const std::size_t fineStepCount = static_cast<std::size_t>(roundedFineStepCount);
+    const std::size_t tStepCount = fineStepCount / 2;
+    const std::size_t yStepCount = fineStepCount / 4;
+
+    std::vector<double> sValues(fineStepCount + 1);
+    sValues[0] = -(conditions.alpha_0 / conditions.alpha_1);
+
+    for (std::size_t i = 0; i < fineStepCount; ++i)
     {
-        double s_half = methodEuler(x, s_method.back().second, h, [&equations](double x_k, double s)
-                                    { return -pow(s, 2.0) - equations.q(x_k) / equations.p(x_k) * s - equations.r(x_k) / equations.p(x_k); });
-
-        double s_k = modifiedEulerMethod(x, s_method.back().second, h, [&equations](double x_k, double s)
-                                         { return -pow(s, 2.0) - equations.q(x_k) / equations.p(x_k) * s - equations.r(x_k) / equations.p(x_k); });
-
-        double t_half = methodEuler(x, t_method.back().second, s_method.back().second, h, [&equations](double x_k, double t, double s)
-                                    { return equations.f(x_k) / equations.p(x_k) - s * t - (equations.q(x_k) * t) / equations.p(x_k); });
-
-        double t_k = modifiedEulerMethod(x, t_method.back().second, s_k, s_half, h, [&equations](double x_k, double t, double s)
-                                         { return equations.f(x_k) / equations.p(x_k) - s * t - (equations.q(x_k) * t) / equations.p(x_k); });
-
-        s_method.push_back(std::make_pair(s_half, s_k));
-        t_method.push_back(std::make_pair(t_half, t_k));
+        const double x = a + i * h;
+        sValues[i + 1] = modifiedEulerMethod(x, sValues[i], h, [&equations](double x_k, double s)
+                                             { return -pow(s, 2.0) - equations.q(x_k) / equations.p(x_k) * s - equations.r(x_k) / equations.p(x_k); });
     }
 
-    if (s_method.size() != t_method.size())
-        throw std::logic_error("s_method and t_method must have the same size. ");
+    std::vector<double> tValues(tStepCount + 1);
+    tValues[0] = conditions.A / conditions.alpha_1;
 
-    y_method.push_back((conditions.B - conditions.beta_1 * t_method.back().second) / (conditions.beta_0 + conditions.beta_1 * s_method.back().second) + delta);
-
-    auto s_iter = --s_method.end();
-    auto t_iter = --t_method.end();
-
-    for (double x = b; x - h >= a && s_iter != --s_method.begin(); x -= h, --s_iter, --t_iter)
+    for (std::size_t i = 0; i < tStepCount; ++i)
     {
-        double y = modifiedEulerMethodBackwards(x, y_method.back(), s_iter->second, s_iter->first, t_iter->second, t_iter->first, h, [](double y, double s, double t)
-                                                { return s * y + t; });
-
-        y_method.push_back(y);
+        const std::size_t sIndex = 2 * i;
+        const double x = a + sIndex * h;
+        tValues[i + 1] = modifiedEulerMethod(x, tValues[i], sValues[sIndex], sValues[sIndex + 1], 2.0 * h,
+                                             [&equations](double x_k, double t, double s)
+                                             { return equations.f(x_k) / equations.p(x_k) - s * t - (equations.q(x_k) * t) / equations.p(x_k); });
     }
 
-    std::reverse(y_method.begin(), y_method.end());
+    std::vector<double> yValues(yStepCount + 1);
+    yValues[yStepCount] = (conditions.B - conditions.beta_1 * tValues.back()) /
+                              (conditions.beta_0 + conditions.beta_1 * sValues.back()) +
+                          delta;
 
-    return y_method;
+    for (std::size_t i = yStepCount; i > 0; --i)
+    {
+        const std::size_t sEndIndex = 4 * i;
+        const std::size_t tEndIndex = 2 * i;
+        const double x = a + sEndIndex * h;
+        yValues[i - 1] = modifiedEulerMethodBackwards(x, yValues[i], sValues[sEndIndex], sValues[sEndIndex - 2],
+                                                      tValues[tEndIndex], tValues[tEndIndex - 1], 4.0 * h,
+                                                      [](double y, double s, double t)
+                                                      { return s * y + t; });
+    }
+
+    return yValues;
 }

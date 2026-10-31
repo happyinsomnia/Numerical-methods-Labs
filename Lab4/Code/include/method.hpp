@@ -67,6 +67,7 @@ double methodEulerBackwards(double x_k, double y_k, double s_k, double t_k, doub
 // for y(x) function
 double modifiedEulerMethodBackwards(double x_k, double y_k, double s_k, double s_half, double t_k, double t_half, double h, std::function<double(double, double, double)> func);
 
+// The returned y values are spaced by 4h; (b - a) must be an integer multiple of 4h.
 std::vector<double> factorizationMethod(double a,
                                         double b,
                                         double h,

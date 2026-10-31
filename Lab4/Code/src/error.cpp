@@ -1,4 +1,5 @@
 #include <error.hpp>
+#include <cmath>
 
 double norm(const std::vector<double> exact, const std::vector<double> yMethod)
 {
