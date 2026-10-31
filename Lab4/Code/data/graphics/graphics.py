@@ -15,12 +15,13 @@ def show_graphics():
     plt.xlabel("x")
     plt.ylabel("y")
 
+    x_actual = [x for x, y in actualFunction]
     y_actual = [y for x, y in actualFunction]
 
     x_method = [x for x, y in numericalSolution]
     y_method = [y for x, y in numericalSolution]
 
-    plt.plot(x_method, y_actual, label="Точное решение", color="blue", linestyle="-")
+    plt.plot(x_actual, y_actual, label="Точное решение", color="blue", linestyle="-")
     plt.plot(x_method, y_method, label="Численное решение", color="red", linestyle="--")
     plt.grid()
     plt.legend()
@@ -69,10 +70,11 @@ def show_graphics():
     plt.xlabel("δ")
     plt.ylabel("error")
 
-    delta = [x for x, y in deltaError]
-    error = [y for x, y in deltaError]
+    for h, data in deltaError:
+        delta = [x for x, y in data]
+        error = [y for x, y in data]
+        plt.loglog(delta, error, marker="o", label=f"h = {h:g}")
 
-    plt.loglog(delta, error, label="Максимальная ошибка", color="blue", linestyle="-")
     plt.grid()
     plt.legend()
 

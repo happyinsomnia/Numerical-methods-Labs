@@ -1,5 +1,5 @@
 from pathlib import Path
-from parse import parse
+from parse import parse, parse_delta_error
 
 filepathNumericalSolution = Path("../plot_data/Numerical_function.txt")
 filepathNumericalSolutionError = Path("../plot_data/Numerical_function_error.txt")
@@ -10,5 +10,5 @@ filepathActualFunction = Path("../plot_data/actual_function.txt")
 numericalSolution = parse(filepathNumericalSolution)
 numericalSolutionError = parse(filepathNumericalSolutionError)
 stepError = parse(filepathStepError)
-deltaError = parse(filepathDeltaError)
+deltaError = parse_delta_error(filepathDeltaError)
 actualFunction = parse(filepathActualFunction)

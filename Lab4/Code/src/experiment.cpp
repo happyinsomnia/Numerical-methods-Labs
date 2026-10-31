@@ -8,16 +8,16 @@
 
 namespace
 {
-std::vector<double> buildExactValues(double a, double step, std::size_t count)
-{
-    std::vector<double> exactValues;
-    exactValues.reserve(count);
+    std::vector<double> buildExactValues(double a, double step, std::size_t count)
+    {
+        std::vector<double> exactValues;
+        exactValues.reserve(count);
 
-    for (std::size_t i = 0; i < count; ++i)
-        exactValues.push_back(exactSolution(a + i * step));
+        for (std::size_t i = 0; i < count; ++i)
+            exactValues.push_back(exactSolution(a + i * step));
 
-    return exactValues;
-}
+        return exactValues;
+    }
 }
 
 void RunExperiments(const std::string path,
@@ -103,14 +103,22 @@ void RunExperiments(const std::string path,
         std::cerr << "Can't open the file " + deltaErrorPath << std::endl;
         return;
     }
+    fileDeltaError << "# delta vs error\n";
 
-    for (double delta = 1e-1; delta >= 1e-11; delta /= 10)
+    for (double _h = 0.25; _h > 1e-4; _h /= 2)
     {
-        y_method = factorizationMethod(a, b, h, equations, conditions, delta);
+        fileDeltaError << "# h: " << _h << '\n';
 
-        double error = norm(exact, y_method);
+        for (double delta = 1e-1; delta >= 1e-11; delta /= 10)
+        {
+            y_method = factorizationMethod(a, b, _h, equations, conditions, delta);
 
-        fileDeltaError << delta << ' ' << error << '\n';
+            const auto yActual = buildExactValues(a, 4.0 * _h, y_method.size());
+            const double error = norm(yActual, y_method);
+
+            fileDeltaError << delta << ' ' << error << '\n';
+        }
+        fileDeltaError << '\n';
     }
 
     fileDeltaError.close();
@@ -127,10 +135,10 @@ void RunExperiments(const std::string path,
     }
 
     fileActualFunction << "x vs y \n";
-    for (std::size_t i = 0; i < y_method.size(); ++i)
+    for (std::size_t i = 0; i < exact.size(); ++i)
     {
         const double x = a + i * 4.0 * h;
-        fileActualFunction << x << ' ' << exactSolution(x) << '\n';
+        fileActualFunction << x << ' ' << exact[i] << '\n';
     }
 
     fileActualFunction.close();
