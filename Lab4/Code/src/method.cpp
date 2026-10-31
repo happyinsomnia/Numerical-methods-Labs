@@ -47,13 +47,16 @@ std::vector<double> factorizationMethod(double a,
         throw std::invalid_argument("a and b must define a finite interval, and h must be positive.");
 
     const double fineStepCountValue = (b - a) / h;
+
     if (!std::isfinite(fineStepCountValue) ||
         fineStepCountValue >= static_cast<double>(std::numeric_limits<long long>::max()))
         throw std::invalid_argument("The interval is too large for the requested step.");
 
     const long long roundedFineStepCount = std::llround(fineStepCountValue);
+
     const double alignmentTolerance = 64.0 * std::numeric_limits<double>::epsilon() *
                                       std::max(1.0, std::abs(fineStepCountValue));
+
     if (roundedFineStepCount < 4 || roundedFineStepCount % 4 != 0 ||
         std::abs(fineStepCountValue - roundedFineStepCount) > alignmentTolerance)
         throw std::invalid_argument("The interval length must be an integer multiple of 4h.");

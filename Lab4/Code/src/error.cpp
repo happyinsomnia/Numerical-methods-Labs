@@ -1,8 +1,12 @@
 #include <error.hpp>
 #include <cmath>
+#include <stdexcept>
 
-double norm(const std::vector<double> exact, const std::vector<double> yMethod)
+double norm(const std::vector<double> &exact, const std::vector<double> &yMethod)
 {
+    if (exact.size() != yMethod.size())
+        throw std::invalid_argument("The vectors must have the same size.");
+
     double maxNorm = 0.0;
 
     for (size_t i = 0; i < exact.size(); i++)

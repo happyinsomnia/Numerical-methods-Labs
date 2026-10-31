@@ -8,7 +8,6 @@
 
 int main()
 {
-    // TODO: 4 график для разных h
     double A = 3;
     double B = std::numbers::e;
     double alpha_0 = 1;
