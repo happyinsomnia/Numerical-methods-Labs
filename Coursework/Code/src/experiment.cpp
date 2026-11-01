@@ -37,6 +37,11 @@ void RunExperiments(const std::string path,
 
     auto modifiedResult = modified_method_Euler::solveODYSecondOrderByModifiedEuler(a, b, _h, y1, y2);
 
+    const auto xAt = [a, b](std::size_t index, std::size_t pointCount)
+    {
+        return pointCount == 1 ? a : a + (b - a) * index / (pointCount - 1);
+    };
+
     double x = a;
 
     for (const auto &state : modifiedResult)
@@ -115,14 +120,13 @@ void RunExperiments(const std::string path,
 
     fileExperiment << "Graphic 1: x vs y " << std::endl;
 
-    auto factorizationResult = factorization_method::factorizationMethod(a, b, _h, equations, conditions);
+    const double factorizationStep = _h / 4.0;
+    auto factorizationResult = factorization_method::factorizationMethod(a, b, factorizationStep, equations, conditions);
+    const std::size_t factorizationPointCount = factorizationResult.size();
 
-    x = a;
-
-    for (const auto &value : factorizationResult)
+    for (std::size_t i = 0; i < factorizationResult.size(); ++i)
     {
-        fileExperiment << x << ' ' << value << '\n';
-        x += _h;
+        fileExperiment << xAt(i, factorizationResult.size()) << ' ' << factorizationResult[i] << '\n';
     }
 
     fileExperiment << '\n';
@@ -131,12 +135,10 @@ void RunExperiments(const std::string path,
 
     fileExperiment << "Graphic 2: x vs error " << std::endl;
 
-    x = a;
-
-    for (const auto &value : factorizationResult)
+    for (std::size_t i = 0; i < factorizationResult.size(); ++i)
     {
-        fileExperiment << x << ' ' << globalError(exactSolution(x), value) << std::endl;
-        x += _h;
+        const double x = xAt(i, factorizationResult.size());
+        fileExperiment << x << ' ' << globalError(exactSolution(x), factorizationResult[i]) << std::endl;
     }
 
     fileExperiment << std::endl;
@@ -145,11 +147,17 @@ void RunExperiments(const std::string path,
 
     fileExperiment << "Graphic 3: h vs error " << std::endl;
 
-    for (double h = 0.5; h >= 1e-4; h /= 2.0)
+    for (double h = 0.25; h >= 1e-4; h /= 2.0)
     {
         factorizationResult = factorization_method::factorizationMethod(a, b, h, equations, conditions);
 
-        auto exact = buildExactSolution(a, b, h, exactSolution);
+        std::vector<double> exact;
+        exact.reserve(factorizationResult.size());
+        for (std::size_t i = 0; i < factorizationResult.size(); ++i)
+        {
+            exact.push_back(exactSolution(xAt(i, factorizationResult.size())));
+        }
+
         fileExperiment << h << ' ' << maxError(exact, factorizationResult) << std::endl;
     }
 
@@ -159,7 +167,7 @@ void RunExperiments(const std::string path,
 
     fileExperiment << "Graphic 4: time vs error " << std::endl;
 
-    for (double h = 0.5; h >= 1e-4; h /= 2.0)
+    for (double h = 0.25; h >= 1e-4; h /= 2.0)
     {
         auto start = std::chrono::steady_clock::now();
 
@@ -168,7 +176,12 @@ void RunExperiments(const std::string path,
         auto end = std::chrono::steady_clock::now();
         double elapsed = std::chrono::duration<double>(end - start).count();
 
-        auto exact = buildExactSolution(a, b, h, exactSolution);
+        std::vector<double> exact;
+        exact.reserve(factorizationResult.size());
+        for (std::size_t i = 0; i < factorizationResult.size(); ++i)
+        {
+            exact.push_back(exactSolution(xAt(i, factorizationResult.size())));
+        }
 
         fileExperiment << elapsed << ' ' << maxError(exact, factorizationResult) << std::endl;
     }
@@ -191,8 +204,9 @@ void RunExperiments(const std::string path,
 
     fileExactFunction << "x vs y" << std::endl;
 
-    for (double x = a; x <= b; x += _h)
+    for (std::size_t i = 0; i < factorizationPointCount; ++i)
     {
+        const double x = xAt(i, factorizationPointCount);
         fileExactFunction << x << ' ' << exactSolution(x) << std::endl;
     }
 
