@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from data import load_exact_function, load_experiments
 from parse import ExperimentData, GraphData
 
-
 _GRAPH_SETTINGS = {
     1: ("Actual function and approximate function.png", "Решения методов", False, None),
     2: ("Approximate function error.png", "Ошибка по x", False, None),
@@ -59,6 +58,36 @@ def _plot_graph(
         axes.set_xlabel(plotted_graph.x_label)
         axes.set_ylabel(plotted_graph.y_label)
 
+    if graph_number == 3:
+        positive_points = [
+            point
+            for experiment in experiments
+            if graph_number in experiment.graphs
+            for point in experiment.graphs[graph_number].points
+            if point[0] > 0 and point[1] > 0
+        ]
+        if positive_points:
+            smallest_h = min(point[0] for point in positive_points)
+            anchor_h = max(point[0] for point in positive_points)
+            anchor_error = max(error for h, error in positive_points if h == anchor_h)
+            smallest_reference_error = anchor_error * (smallest_h / anchor_h) ** 2
+            axes.plot(
+                (smallest_h, anchor_h),
+                (smallest_reference_error, anchor_error),
+                color="tab:green",
+                linestyle="--",
+                label=r"$O(h^2)$",
+            )
+
+            axes.set_ylim(
+                bottom=min(
+                    min(error for _, error in positive_points),
+                    smallest_reference_error,
+                )
+                * 0.8,
+                top=max(error for _, error in positive_points) * 1.1,
+            )
+
     if use_log_scale:
         axes.set_xscale("log")
         axes.set_yscale("log")
@@ -74,7 +103,12 @@ def show_graphics() -> None:
     experiments = load_experiments()
     exact_function = load_exact_function()
 
-    for graph_number, (filename, title, use_log_scale, marker) in _GRAPH_SETTINGS.items():
+    for graph_number, (
+        filename,
+        title,
+        use_log_scale,
+        marker,
+    ) in _GRAPH_SETTINGS.items():
         _plot_graph(
             experiments,
             graph_number,
